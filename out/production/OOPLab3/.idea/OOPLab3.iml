@@ -18,5 +18,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="guicedee.services.jfreechart" level="project" />
+    <orderEntry type="library" name="appslandia.javafx" level="project" />
   </component>
 </module>

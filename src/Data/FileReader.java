@@ -4,8 +4,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.nio.*;
-import java.util.*;
 import java.util.ArrayList;
 
 public class FileReader {
@@ -20,7 +18,6 @@ public class FileReader {
                 .map(line -> line.split(","))
                 .map(Parser::parseData)
                 .collect(ArrayList::new,ArrayList::add,ArrayList::addAll);
-        System.out.println(DataStr);
         return DataStr;
     }
 }

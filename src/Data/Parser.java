@@ -1,25 +1,6 @@
 package src.Data;
 
 public class Parser {
-    public static int parseInt(String text){
-        int result = 0;
-        System.out.println(text);
-        try {
-            result = Integer.parseInt(text);
-        } catch (NumberFormatException e) {
-            result = -1;
-        }
-        return result;
-    }
-    public static long parseLong(String text){
-        long result = 0;
-        try {
-            result = Long.parseLong(text);
-        } catch (NumberFormatException e) {
-            result = -1;
-        }
-        return result;
-    }
     public static Float parseFloat(String text){
         float result = 0;
         try {
@@ -32,6 +13,7 @@ public class Parser {
     public static Data parseData(String[] data){
         return new Data(
                 data[0],
+                data[1],
                 Parser.parseFloat(data[2]),
                 Parser.parseFloat(data[3]),
                 Parser.parseFloat(data[4]),
@@ -41,7 +23,17 @@ public class Parser {
                 Parser.parseFloat(data[8]),
                 Parser.parseFloat(data[9]),
                 Parser.parseFloat(data[10]),
-                Parser.parseFloat(data[11])
+                Parser.parseFloat(data[11]),
+                Parser.parseFloat(data[12]),
+                Parser.parseFloat(data[13]),
+                Parser.parseFloat(data[14]),
+                Parser.parseFloat(data[15]),
+                Parser.parseFloat(data[16]),
+                Parser.parseFloat(data[17]),
+                Parser.parseFloat(data[18]),
+                Parser.parseFloat(data[19]),
+                Parser.parseFloat(data[20]),
+                Parser.parseFloat(data[21])
         );
     }
 }
