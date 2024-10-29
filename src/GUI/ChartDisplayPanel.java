@@ -13,7 +13,6 @@ import java.util.ArrayList;
 public class ChartDisplayPanel extends JPanel{
     JPanel panel;
     public ChartDisplayPanel(String series, ArrayList<Data> data, int rowkey){
-        removeAll();
         Data d = data.get(rowkey);
         System.out.println("Inside ChartDisplayPanel");
         panel = new JPanel();

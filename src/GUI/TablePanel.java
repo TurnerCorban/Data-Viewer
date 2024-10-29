@@ -1,11 +1,15 @@
 package src.GUI;
 
+import src.Data.Data;
+
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.function.Predicate;
 
 public class TablePanel extends JPanel implements ActionListener {
 
@@ -14,6 +18,9 @@ public class TablePanel extends JPanel implements ActionListener {
     DataFilterPanel[] filters;
     TableModel model;
     JScrollPane scrollpane;
+    JButton button;
+    ArrayList<Data> data;
+    TableRowSorter<TableModel> sorter;
 
     TablePanel(DefaultTableModel model) {
         this.model = model;
@@ -25,44 +32,45 @@ public class TablePanel extends JPanel implements ActionListener {
         setLayout(new BorderLayout());
 
         filterpanel = new JPanel();
+        //filters = Arrays.stream(model.getFilterSets())
+        //                .map(DataFilterPanel::new)
+        //                .peek(dfp -> filterpanel.add(dfp))
+        //                .peek(dfp -> dfp.addActionListener(this))
+        //                .toArray(DataFilterPanel[]::new);
+
 
 
         filterpanel.setLayout(new BoxLayout(filterpanel, BoxLayout.PAGE_AXIS));
 
-        table = new JTable(model);
+
+
+        sorter = new TableRowSorter(model);
+        table = new JTable();
+        table.setModel(model);
         table.getTableHeader().setReorderingAllowed(false);
-
-
-
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if(e.getClickCount() == 1) {
-                    final JTable table = (JTable)e.getSource();
-                    final int row = table.getSelectedRow();
-                    final int col = table.getSelectedColumn();
-                    System.out.println(row + " " + col);
-                }
-            }
-        });
-
-
-
-        TableRowSorter<TableModel> sorter;
-        sorter = new TableRowSorter<>(model);
         table.setRowSorter(sorter);
-
-        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
-        sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
-        sorter.setSortKeys(sortKeys);
-
-        table = new JTable(model);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        changeRenderer(table); //Overrides the JTable's default renderer to display -1 as N/A
-
 
         scrollpane = new JScrollPane(table,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollpane.setPreferredSize(new Dimension(780, 400));
+
+        changeRenderer(table); //Overrides the JTable's default renderer to display -1 as N/A
+
+
+        button = new JButton("Display Selected Graph");
+
+        button.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedColumn = 0;
+                if (table.getSelectedColumn() >= selectedColumn) {
+                    selectedColumn = table.getSelectedColumn();
+                }
+                System.out.println(selectedColumn);
+                Display.refreshChart(selectedColumn);
+            }
+        });
 
         add(filterpanel, BorderLayout.NORTH);
         add(scrollpane, BorderLayout.CENTER);
@@ -87,6 +95,13 @@ public class TablePanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        HashMap<Integer, Predicate[]> columnToFilterMap = new HashMap<>();
+        for (DataFilterPanel filter : filters) {
+            Predicate[] filters = new Predicate[0]; //= filters.getCheckedFilters();
+            for (int i = 0; i < model.getColumnCount(); i++){
+                if(model.getColumnClass(i).equals(filter.getSample().getClass()))
+                    columnToFilterMap.put(i, filters);
+            }
+        }
     }
 }
