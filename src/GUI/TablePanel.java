@@ -3,15 +3,15 @@ package src.GUI;
 import src.Data.Data;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.function.Predicate;
 
-public class TablePanel extends JPanel implements ActionListener {
+public class TablePanel extends JPanel{
 
     JTable table;
     JPanel filterpanel = new JPanel();
@@ -21,6 +21,8 @@ public class TablePanel extends JPanel implements ActionListener {
     JButton button;
     ArrayList<Data> data;
     TableRowSorter<TableModel> sorter;
+    JTextField filterField;
+    JComboBox filterComboBox;
 
     TablePanel(DefaultTableModel model) {
         this.model = model;
@@ -29,7 +31,7 @@ public class TablePanel extends JPanel implements ActionListener {
         model.setColumnIdentifiers(identifiers);
 
         setPreferredSize(new Dimension(1000, 400));
-        setLayout(new BorderLayout());
+        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         filterpanel = new JPanel();
         //filters = Arrays.stream(model.getFilterSets())
@@ -38,11 +40,7 @@ public class TablePanel extends JPanel implements ActionListener {
         //                .peek(dfp -> dfp.addActionListener(this))
         //                .toArray(DataFilterPanel[]::new);
 
-
-
-        filterpanel.setLayout(new BoxLayout(filterpanel, BoxLayout.PAGE_AXIS));
-
-
+        filterpanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
         sorter = new TableRowSorter(model);
         table = new JTable();
@@ -56,24 +54,38 @@ public class TablePanel extends JPanel implements ActionListener {
 
         changeRenderer(table); //Overrides the JTable's default renderer to display -1 as N/A
 
-
-        button = new JButton("Display Selected Graph");
-
-        button.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedColumn = 0;
-                if (table.getSelectedColumn() >= selectedColumn) {
-                    selectedColumn = table.getSelectedColumn();
-                }
-                System.out.println(selectedColumn);
-                Display.refreshChart(selectedColumn);
+        filterField = new JTextField();
+        filterField.setPreferredSize(new Dimension(300,20));
+        filterField.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                textFilter();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                textFilter();
+            }
+            public void changedUpdate(DocumentEvent e) {
+                textFilter();
             }
         });
 
-        add(filterpanel, BorderLayout.NORTH);
+
+        filterComboBox = new JComboBox(new Object[]{"GDP","GDP growth","GDP per capita","Inflation GDP deflator","Inflation consumer prices"});
+        filterComboBox.setPreferredSize(new Dimension(300,20));
+        filterComboBox.setSelectedIndex(0);
+        filterComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateFilter();
+            }
+        });
+
+        filterpanel.add(new JLabel("Country Filter:"));
+        filterpanel.add(filterField);
+        filterpanel.add(new JLabel("Series Filter:"));
+        filterpanel.add(filterComboBox);
+
         add(scrollpane, BorderLayout.CENTER);
+        add(filterpanel, BorderLayout.SOUTH);
 
     }
     void changeRenderer(JTable table) {         //Overrides the JTable's default renderer to display -1 as N/A
@@ -92,16 +104,37 @@ public class TablePanel extends JPanel implements ActionListener {
             }
         });
     }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        HashMap<Integer, Predicate[]> columnToFilterMap = new HashMap<>();
-        for (DataFilterPanel filter : filters) {
-            Predicate[] filters = new Predicate[0]; //= filters.getCheckedFilters();
-            for (int i = 0; i < model.getColumnCount(); i++){
-                if(model.getColumnClass(i).equals(filter.getSample().getClass()))
-                    columnToFilterMap.put(i, filters);
-            }
+    private void textFilter() {
+        RowFilter<TableModel, Integer> rf = null;
+        try {
+            rf = RowFilter.regexFilter(filterField.getText(), 0);
+        } catch (java.util.regex.PatternSyntaxException e) {
+            return;
         }
+        sorter.setRowFilter(rf);
+    }
+    protected void updateFilter() {
+        RowFilter<TableModel, Integer> rf = null;
+        switch(filterComboBox.getSelectedIndex()){
+            case 0:
+                rf = RowFilter.regexFilter("Gross" , 1);
+                break;
+            case 1:
+                rf = RowFilter.regexFilter("GDP growth", 1);
+                break;
+            case 2:
+                rf = RowFilter.regexFilter("GDP Per", 1);
+                break;
+            case 3:
+                rf = RowFilter.regexFilter("Inflation GDP", 1);
+                break;
+            case 4:
+                rf = RowFilter.regexFilter("Inflation consumer prices", 1);
+                break;
+            case 5:
+                rf = RowFilter.regexFilter("Inflation GDP growth", 1);
+                break;
+        }
+        sorter.setRowFilter(rf);
     }
 }

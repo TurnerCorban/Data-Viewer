@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.ArrayList;
 
-public class FileReader {
+public class FileReader{
 
     public static ArrayList<Data> readFile(String filename) throws IOException{
         String contents = Files.readString(Path.of(filename), StandardCharsets.UTF_8);

@@ -1,13 +1,21 @@
 package src.GUI;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class DataFilterPanel extends JPanel {
-    JCheckBox inf;
-    JCheckBox inflation;
+    JCheckBox infconsumer;
+    JCheckBox infgdp;
     JCheckBox GDPgrowth;
     JCheckBox GDPpercapita;
-    public DataFilterPanel(int i) {
+    JPanel panel;
+    public DataFilterPanel() {
+        panel = new JPanel();
+
+        setPreferredSize(new Dimension(1000, 400));
+
+
+
     }
 
     public Object getSample() {

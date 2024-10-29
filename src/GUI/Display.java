@@ -14,9 +14,12 @@ public class Display {
     JTextArea textArea;
     JButton button;
 
+
     public Display(DefaultTableModel model, ArrayList<Data> data) {
         this.data = data;
         frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+
+
 
         TablePanel tablePanel = new TablePanel(model);
 
@@ -34,4 +37,6 @@ public class Display {
     static void refreshChart(int selectedColumn){
         frame.add(new ChartDisplayPanel("Series", data, selectedColumn));
     }
+
+
 }

@@ -14,6 +14,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
         data = FileReader.readFile("src/Countries.csv");
         System.out.println(data.size());
+        Data d = data.get(2);
+        System.out.println(d.series());
 
         DefaultTableModel model = addData(data);
         new Display(model, data);
