@@ -4,13 +4,12 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 public class Parser {
-    static NumberFormat formatter = new DecimalFormat("###.#####");
     public static Float parseFloat(String text){
-        float result = 0;
+        float result;
         try {
             result = Float.parseFloat(text);
         } catch (NumberFormatException e) {
-            result = -1;
+            result = -99;
         }
         return result;
     }

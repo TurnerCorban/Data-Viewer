@@ -11,12 +11,13 @@ import javax.swing.*;
 import java.util.ArrayList;
 
 public class ChartDisplayPanel extends JPanel{
-    JPanel panel;
-    public ChartDisplayPanel(String series, ArrayList<Data> data, int rowkey){
+    static JPanel panel;
+    static ChartPanel chartPanel;
+
+    public ChartDisplayPanel(ArrayList<Data> data, int rowkey){
         Data d = data.get(rowkey);
-        System.out.println("Inside ChartDisplayPanel");
         panel = new JPanel();
-        DefaultCategoryDataset dataset = createDataset(d,data);
+        DefaultCategoryDataset dataset = createDataset(d);
         JFreeChart chart = ChartFactory.createLineChart(
                 d.country(),
                 "Years",
@@ -27,34 +28,26 @@ public class ChartDisplayPanel extends JPanel{
                 false,
                 false
         );
-        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel = new ChartPanel(chart);
         panel.setVisible(true);
         panel.add(chartPanel);
         add(panel);
     }
 
-    public static DefaultCategoryDataset createDataset(Data d, ArrayList<Data> data){
+    public static DefaultCategoryDataset createDataset(Data d){
+        Object[] values = {d.yr2004(), d.yr2005(),d.yr2006(),d.yr2007(),d.yr2008(),d.yr2009(),d.yr2010(),d.yr2011(),d.yr2012(),d.yr2013(),d.yr2014(),d.yr2015(),d.yr2016(),d.yr2017(),d.yr2018(),d.yr2019(),d.yr2020(),d.yr2021(),d.yr2022(),d.yr2023()};
+        String[] years = {"2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"};
+        StatsPanel.setText(values, years);
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.addValue(d.yr2004(),d.series(),"2004");
-        dataset.addValue(d.yr2005(),d.series(),"2005");
-        dataset.addValue(d.yr2006(),d.series(),"2006");
-        dataset.addValue(d.yr2007(),d.series(),"2007");
-        dataset.addValue(d.yr2008(),d.series(),"2008");
-        dataset.addValue(d.yr2009(),d.series(),"2009");
-        dataset.addValue(d.yr2010(),d.series(),"2010");
-        dataset.addValue(d.yr2011(),d.series(),"2011");
-        dataset.addValue(d.yr2012(),d.series(),"2012");
-        dataset.addValue(d.yr2013(),d.series(),"2013");
-        dataset.addValue(d.yr2014(),d.series(),"2014");
-        dataset.addValue(d.yr2015(),d.series(),"2015");
-        dataset.addValue(d.yr2016(),d.series(),"2016");
-        dataset.addValue(d.yr2017(),d.series(),"2017");
-        dataset.addValue(d.yr2018(),d.series(),"2018");
-        dataset.addValue(d.yr2019(),d.series(),"2019");
-        dataset.addValue(d.yr2020(),d.series(),"2020");
-        dataset.addValue(d.yr2021(),d.series(),"2021");
-        dataset.addValue(d.yr2022(),d.series(),"2022");
-        dataset.addValue(d.yr2023(),d.series(),"2023");
+        float avg = 0;
+        for (int i = 0; i < values.length; i++){
+            Object temp = values[i];
+            if ((Float) temp == -99){
+                temp = null;
+            }
+            assert values[i] instanceof Number;
+            dataset.addValue((Number) temp, d.series(), years[i]);
+        }
         return dataset;
     }
 }

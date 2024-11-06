@@ -12,7 +12,7 @@ public class FileReader{
         String contents = Files.readString(Path.of(filename), StandardCharsets.UTF_8);
 
         List<String> lines = List.of(contents.split("\n"));
-        ArrayList<Data> DataStr = new ArrayList<>();
+        ArrayList<Data> DataStr;
         DataStr = lines.stream()
                 .skip(1)
                 .map(line -> line.split(","))

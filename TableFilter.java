@@ -1,3 +1,5 @@
+import src.GUI.ChartDisplayPanel;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -17,6 +19,7 @@ public class TableFilter {
     private JTable table;
     private JComboBox filterBy;
     private JTextField filterText;
+    private JLabel reminder;
 
     public TableFilter() {
         EventQueue.invokeLater(new Runnable() {

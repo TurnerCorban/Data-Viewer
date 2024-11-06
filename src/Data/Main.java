@@ -1,31 +1,26 @@
 package src.Data;
 
 import src.GUI.Display;
-
-import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class Main {
-    static JFrame frame = new JFrame("Data Viewer");
     static ArrayList<Data> data;
+    static DefaultTableModel model;
+
+    final static String filename = "src/Countries.csv";
 
     public static void main(String[] args) throws IOException {
-        data = FileReader.readFile("src/Countries.csv");
-        System.out.println(data.size());
-        Data d = data.get(2);
-        System.out.println(d.series());
-
-        DefaultTableModel model = addData(data);
+        data = FileReader.readFile(filename);
+        model = addData(data);
         new Display(model, data);
     }
 
     static DefaultTableModel addData(ArrayList<Data> data) {
         DefaultTableModel model = new DefaultTableModel(0,22){
             @Override
-            public boolean isCellEditable(int row, int column) {
-                //all cells false
+            public boolean isCellEditable(int row, int column) { //prevents editing of table cells
                 return false;
             }
         };
