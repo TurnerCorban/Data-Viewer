@@ -11,10 +11,10 @@ public class Main {
 
     final static String filename = "src/Countries.csv";
 
-    public static void main(String[] args) throws IOException {
+    public static void main() throws IOException {
         data = FileReader.readFile(filename);
         model = addData(data);
-        new Display(model, data);
+        Display.display(model, data);
     }
 
     static DefaultTableModel addData(ArrayList<Data> data) {

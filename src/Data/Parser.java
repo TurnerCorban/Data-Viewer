@@ -1,8 +1,5 @@
 package src.Data;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-
 public class Parser {
     public static Float parseFloat(String text){
         float result;

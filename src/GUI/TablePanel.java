@@ -1,5 +1,8 @@
 package src.GUI;
 
+import src.Data.Observer;
+import src.Data.Subject;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -7,8 +10,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.*;
 import java.awt.*;
+import java.util.ArrayList;
 
-public class TablePanel extends JPanel{
+public class TablePanel extends JPanel implements Subject {
     JTable table;
     JPanel filterPanel;
     TableModel model;
@@ -16,58 +20,76 @@ public class TablePanel extends JPanel{
     TableRowSorter<TableModel> sorter;
     JTextField filterField;
     JComboBox<Object> filterComboBox;
+    private int rowkey;
+    private ArrayList<src.Data.Observer> observers;
 
     TablePanel(DefaultTableModel model) {
         this.model = model;
-        String[] identifiers = {"Country Name","Series Name","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"};
+
+        observers = new ArrayList<>(); //List of the observers watching this class
+
+        String[] identifiers = {"Country","Series","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"};
         model.setColumnIdentifiers(identifiers);
 
         setPreferredSize(new Dimension(1000, 400));
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
-        filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
         sorter = new TableRowSorter<>(model);
-        table = new JTable();
-        table.setModel(model);
-        table.getTableHeader().setReorderingAllowed(false);
-        table.setRowSorter(sorter);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        table.getSelectionModel().addListSelectionListener(new RowListener());
-
-        scrollPane = new JScrollPane(table,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setPreferredSize(new Dimension(780, 400));
-
-        changeRenderer(table); //Overrides the JTable's default renderer to display -1 as N/A
-
-        filterField = new JTextField();
-        filterField.setPreferredSize(new Dimension(300,20));
-        filterField.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) {
-                textFilter();
+        table = new JTable(){
+            {
+                setModel(model);
+                getTableHeader().setReorderingAllowed(false);
+                setRowSorter(sorter);
+                setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                getSelectionModel().addListSelectionListener(new RowListener());
             }
-            public void removeUpdate(DocumentEvent e) {
-                textFilter();
-            }
-            public void changedUpdate(DocumentEvent e) {
-                textFilter();
-            }
-        });
+        };
 
-        filterComboBox = new JComboBox<>(new Object[]{"GDP","GDP growth","GDP per capita","Inflation GDP deflator","Inflation consumer prices"});
-        filterComboBox.setPreferredSize(new Dimension(300,20));
-        filterComboBox.setSelectedIndex(0);
-        filterComboBox.addActionListener(_ -> updateFilter());
+        scrollPane = new JScrollPane(table,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED){
+            {
+                setPreferredSize(new Dimension(780, 400));
+            }
+        };
 
-        filterPanel.add(new JLabel("Country Filter:"));
-        filterPanel.add(filterField);
-        filterPanel.add(new JLabel("Series Filter:"));
-        filterPanel.add(filterComboBox);
-        filterPanel.add(new JLabel("     Click on a row to update Graph"));
+        filterField = new JTextField(){
+            {
+                setPreferredSize(new Dimension(300,20));
+                getDocument().addDocumentListener(new DocumentListener() {
+                    public void insertUpdate(DocumentEvent e) {
+                        textFilter();
+                    }
+                    public void removeUpdate(DocumentEvent e) {
+                        textFilter();
+                    }
+                    public void changedUpdate(DocumentEvent e) {
+                        textFilter();
+                    }
+                });
+            }
+        };
+
+        filterComboBox = new JComboBox<>(new Object[]{"GDP","GDP growth","GDP per capita","Inflation GDP deflator","Inflation consumer prices"}){
+            {
+                setPreferredSize(new Dimension(300,20));
+                setSelectedIndex(0);
+                addActionListener(_ -> updateFilter());
+            }
+        };
+
+        filterPanel = new JPanel(){
+            {
+                add(new JLabel("Country Filter:"));
+                add(filterField);
+                add(new JLabel("Series Filter:"));
+                add(filterComboBox);
+                add(new JLabel("     Click on a row to update Graph"));
+            }
+        };
+
+        changeRenderer(table); //Overrides the JTable's default renderer to display -99 as N/A
 
         add(scrollPane, BorderLayout.CENTER);
         add(filterPanel, BorderLayout.SOUTH);
-
     }
     void changeRenderer(JTable table) {         //Overrides the JTable's default renderer to display -1 as N/A
         table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -107,10 +129,30 @@ public class TablePanel extends JPanel{
         sorter.setRowFilter(rf);
     }
 
+    @Override
+    public void addObserver(Observer o) {
+        observers.add(o);
+    }
+
+    @Override
+    public void removeObserver(Observer o) {
+        observers.remove(o);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer observer: observers) {
+            observer.update(rowkey);
+        }
+
+    }
+
     private class RowListener implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent event) {
             for (int c : table.getSelectedRows()) {
-                Display.refreshChart(c);
+                rowkey = table.convertRowIndexToModel(c);
+                notifyObservers();
+                System.out.println(rowkey);
             }
         }
     }
