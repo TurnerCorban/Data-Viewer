@@ -13,8 +13,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class TablePanel extends JPanel implements Subject {
@@ -28,6 +26,7 @@ public class TablePanel extends JPanel implements Subject {
     JComboBox<Object> filterComboBox;
     RowFilter<TableModel, Integer> seriesFilter;
     RowFilter<TableModel, Integer> textFilter;
+    JLabel reminder;
     private int rowkey;
     private final ArrayList<src.Data.Observer> observers;
 
@@ -35,7 +34,7 @@ public class TablePanel extends JPanel implements Subject {
         this.model = model;
         observers = new ArrayList<>(); //List of the observers watching this class
 
-        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        setLayout(new BorderLayout());
         setPreferredSize(new Dimension(1000, 400));
 
         String[] identifiers = {"Country","Series","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021","2022","2023"};
@@ -51,6 +50,9 @@ public class TablePanel extends JPanel implements Subject {
                 getSelectionModel().addListSelectionListener(new RowListener()); // Listens for the table being clicked
             }
         };
+
+        table.getColumnModel().getColumn(0).setPreferredWidth(150);
+        table.getColumnModel().getColumn(1).setPreferredWidth(250);
 
         scrollPane = new JScrollPane(table,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
@@ -92,18 +94,17 @@ public class TablePanel extends JPanel implements Subject {
 
         changeRenderer(table); // Overrides the JTable's default renderer to display -999 as N/A
 
-        removeFiltersButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                removeFilters();
-            }
-        });
+        removeFiltersButton.addActionListener(_ -> removeFilters());
 
-        add(filterPanel, BorderLayout.SOUTH);
+        add(filterPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
+        add(reminder = new JLabel("Click on a row in the table to update the graph"){
+            {
+                setHorizontalAlignment(JLabel.CENTER);
+            }
+        }, BorderLayout.SOUTH);
+
     }
-
-
 
     void changeRenderer(JTable table) {         // Overrides the JTable's default renderer to display -1 as N/A
         table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
