@@ -1,69 +1,33 @@
 package src.GUI;
 
 import javax.swing.*;
-import java.awt.*;
-
-//public class StatsPanel extends JPanel {
-//    static JLabel avgLabel;
-//    static JTextArea text;
-//
-//    StatsPanel() {
-//        setLayout(new FlowLayout());
-//        avgLabel = new JLabel("Average"){
-//
-//        };
-//        text = new JTextArea(){
-//            {
-//                setEditable(false);
-//                setPreferredSize(new Dimension(200, 400));
-//            }
-//        };
-////        text = new JTextArea();
-//
-//        add(avgLabel);
-//        add(text);
-//        setVisible(true);
-//    }
-//
-//    public static void setText(Object[] values, String[] years) {
-//        StringBuilder valuesString = new StringBuilder();
-//        float avg = 0;
-//        for (int i = 0; i < values.length; i++) {
-//            if((float) values[i] != -99) {
-//                valuesString.append(years[i]).append("\t").append(values[i]).append("\n");
-//                avg += Float.parseFloat(values[i].toString());
-//            }
-//        }
-//        avgLabel.setText("20 Year Average: %%s\n\n%%s%s".formatted(avg));
-//        text.setText(text.getText().formatted(avg, valuesString.toString()));
-//    }
-//}
 
 public class StatsPanel extends JPanel {
-    static JTextArea label;
+    static JTextArea statsArea;
 
     StatsPanel() {
-        setBorder(BorderFactory.createTitledBorder("Chart Stats"));
+        setBorder(BorderFactory.createTitledBorder("Chart Stats")); // Create a border around the StatsPanel
 
-        label = new JTextArea(){
+        statsArea = new JTextArea(){
             {
+                //Makes the JTextArea behave more like a large JLabel
                 setEditable(false);
                 setOpaque(false);
             }
         };
-        add(label);
+        add(statsArea);
         setVisible(true);
     }
 
     public static void setText(Object[] values, String[] years) {
-        StringBuilder valuesString = new StringBuilder();
+        StringBuilder valuesString = new StringBuilder(); // Uses a string builder for step by step string creation.
         float avg = 0;
         for (int i = 0; i < values.length; i++) {
-            if((float) values[i] != -99) {
-                valuesString.append(years[i]).append("\t").append(values[i]).append("\n");
-                avg += Float.parseFloat(values[i].toString());
+            if((float) values[i] != -999) { // Only adds to valuesString and avg if the value exists (!= -99)
+                valuesString.append(years[i]).append("\t").append(values[i]).append("\n"); // Appends the valid years and values
+                avg += Float.parseFloat(values[i].toString()); // Calculates the average of the currently selected row in TablePanel
             }
         }
-        label.setText("20 Year Average: %s\n\n%s".formatted(avg, valuesString.toString()));
+        statsArea.setText("20 Year Average: %s\n\n%s".formatted(avg, valuesString.toString())); // Outputs avg (first %s) then two newlines then the contents of valuesString (2nd %s)
     }
 }
