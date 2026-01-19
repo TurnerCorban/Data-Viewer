@@ -1,7 +1,6 @@
-package src.GUI;
+package src.main;
 
 import javax.swing.*;
-import java.awt.*;
 
 //public class StatsPanel extends JPanel {
 //    static JLabel avgLabel;

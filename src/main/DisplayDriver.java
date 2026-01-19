@@ -1,13 +1,11 @@
-package src.GUI;
-
-import src.Data.Data;
+package src.main;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
-import src.Data.Observer;
 
-public final class Display{
+
+public final class DisplayDriver {
     static JFrame frame;
     static ArrayList<Data> data;
     static JPanel dataPanel;
@@ -20,7 +18,7 @@ public final class Display{
                 setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
             }
         };
-        Display.data = data;
+        DisplayDriver.data = data;
 
 
         tablePanel = new TablePanel(model);

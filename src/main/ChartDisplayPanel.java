@@ -1,12 +1,10 @@
-package src.GUI;
+package src.main;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
-import src.Data.Data;
-import src.Data.Observer;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -27,7 +25,7 @@ public class ChartDisplayPanel extends JPanel implements Observer {
         setVisible(true);
 
         Observer observer = this;
-        Display.tablePanel.addObserver(observer);
+        DisplayDriver.tablePanel.addObserver(observer);
     }
 
     public void displayChart(ArrayList<Data> data, int rowkey){

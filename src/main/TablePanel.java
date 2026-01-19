@@ -1,7 +1,4 @@
-package src.GUI;
-
-import src.Data.Observer;
-import src.Data.Subject;
+package src.main;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -21,7 +18,7 @@ public class TablePanel extends JPanel implements Subject {
     JTextField filterField;
     JComboBox<Object> filterComboBox;
     private int rowkey;
-    private ArrayList<src.Data.Observer> observers;
+    private final ArrayList<src.main.Observer> observers;
 
     TablePanel(DefaultTableModel model) {
         this.model = model;
@@ -68,7 +65,7 @@ public class TablePanel extends JPanel implements Subject {
             }
         };
 
-        filterComboBox = new JComboBox<>(new Object[]{"GDP","GDP growth","GDP per capita","Inflation GDP deflator","Inflation consumer prices"}){
+        filterComboBox = new JComboBox<>(new Object[]{"All","GDP","GDP growth","GDP per capita","Inflation GDP deflator","Inflation consumer prices"}){
             {
                 setPreferredSize(new Dimension(300,20));
                 setSelectedIndex(0);
@@ -109,7 +106,7 @@ public class TablePanel extends JPanel implements Subject {
     private void textFilter() {
         RowFilter<TableModel, Integer> rf;
         try {
-            rf = RowFilter.regexFilter(filterField.getText(), 0);
+            rf = RowFilter.regexFilter("(?i)" + filterField.getText(), 0);
         } catch (java.util.regex.PatternSyntaxException e) {
             return;
         }
@@ -118,12 +115,13 @@ public class TablePanel extends JPanel implements Subject {
 
     protected void updateFilter() {
         RowFilter<TableModel, Integer> rf = switch (filterComboBox.getSelectedIndex()) {
-            case 0 -> RowFilter.regexFilter("Gross", 1);
-            case 1 -> RowFilter.regexFilter("GDP growth", 1);
-            case 2 -> RowFilter.regexFilter("GDP per", 1);
-            case 3 -> RowFilter.regexFilter("Inflation GDP", 1);
-            case 4 -> RowFilter.regexFilter("Inflation consumer prices", 1);
-            case 5 -> RowFilter.regexFilter("Inflation GDP growth", 1);
+            case 0 -> RowFilter.regexFilter("",1);
+            case 1 -> RowFilter.regexFilter("Gross", 1);
+            case 2 -> RowFilter.regexFilter("GDP growth", 1);
+            case 3 -> RowFilter.regexFilter("GDP per", 1);
+            case 4 -> RowFilter.regexFilter("Inflation GDP", 1);
+            case 5 -> RowFilter.regexFilter("Inflation consumer prices", 1);
+            case 6 -> RowFilter.regexFilter("Inflation GDP growth", 1);
             default -> null;
         };
         sorter.setRowFilter(rf);
