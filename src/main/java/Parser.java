@@ -1,5 +1,3 @@
-package src.main;
-
 public class Parser {
     public static Float parseFloat(String text){
         float result;

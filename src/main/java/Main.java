@@ -1,5 +1,3 @@
-package src.main;
-
 import javax.swing.table.DefaultTableModel;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,7 +6,7 @@ public class Main {
     static ArrayList<Data> data;
     static DefaultTableModel model;
 
-    final static String filename = "src/resources/Countries.csv";
+    final static String filename = "src/main/resources/Countries.csv";
 
     public static void main(String[] args) throws IOException {
         data = FileReader.readFile(filename);

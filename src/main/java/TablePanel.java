@@ -1,5 +1,3 @@
-package src.main;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -18,7 +16,7 @@ public class TablePanel extends JPanel implements Subject {
     JTextField filterField;
     JComboBox<Object> filterComboBox;
     private int rowkey;
-    private final ArrayList<src.main.Observer> observers;
+    private final ArrayList<Observer> observers;
 
     TablePanel(DefaultTableModel model) {
         this.model = model;
