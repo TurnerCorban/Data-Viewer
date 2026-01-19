@@ -1,15 +1,7 @@
-Lab 4 is based off of Lab 3. The Design Patterns used are the Observer and Builder patterns. 
+| High Level Purpose Statement:      | I want to learn how to use Maven to bundle an existing Java project and deploy it, along with managing dependencies.  |
+| :-------- | :------- |
+| Experimental Design | For this lab I will use Lab3/Lab4 from OOP due to it requiring an external dependancy and containing many classes. I have Maven installed from another class, but I will need to learn how to add support for Maven to an existing project and configure it. |
+| Resources Available    | I found numerous resources from Apache, JetBrains, and W3Schools. JetBrains has a guide on how to add support for Maven to an existing Java project, so I will follow that. |
+| Time Estimate: | I believe this project will take about 3 hours. From my very limited experience with Maven I know that the built in support for it in Intellij is very good, and the guides I found are not very long and contain simple steps. |
+| Experiment Notes: |  |
 
-An Observer pattern is used to update the JFreeChart in the program without calling the class directly. The TablePanel implements the subjet interface, and ChartDisplayPanel implements the Observer interface.
-The additional interfaces and methods required are: 
-Interfaces: 
-  1. Observer Interface (Observers of the subject implement this so they can be updated when a subject class notifies observers)
-  2. Subject Interface (Subjects implement this so Observers can be updated)
-Methods: 
-  Subject:
-    1. addObserver(Observer o). Tbe Observing class calls this in order to add itself to the list of observers the Subject notifies
-    2. notifyObservers(). When the subject class calls this, each Observer class that added itself to the list at runtime is notified. This and the update method in Observer classes can be changed to pass values.  
-  Observer:
-    1. update(). Is called when a Subject calls notifyObservers.
-
-I used a StringBuilder for my StatsPanel to reduce complexity when adding text to a JTextArea. StringBuilder is a built in method in java that contains some very useful functions. Since it's a built in function, no additional methods are required. 
