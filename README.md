@@ -21,6 +21,8 @@ mvn exec:java
 java -jar target\Data-Viewer-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 
+The jar package is portable, try running it in your file explorer as well 
+
 
 ## Lab Document: ##
 
