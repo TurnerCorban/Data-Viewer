@@ -6,10 +6,11 @@ public class Parser {
         try {
             result = Float.parseFloat(text);
         } catch (NumberFormatException e) {
-            result = -99;
+            result = -999;
         }
         return result;
     }
+
     public static Data parseData(String[] data){
         return new Data(
                 data[0],
